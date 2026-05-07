@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from "react";
+ import React, { useMemo, useState } from "react";
 
 type PageName = "home" | "impressum";
 type IconName = "arrow" | "check" | "globe" | "phone" | "store" | "mail" | "shield" | "clock" | "star" | "legal";
@@ -10,6 +10,9 @@ type AgbSection = { title: string; text: string };
 
 const contactData = {
   companyName: "DZ Studios",
+  addressLine1: "Bolligenstrasse 19a",
+  addressLine2: "3326 Krauchthal",
+  country: "Schweiz",
   email: "info@dzstudio.ch",
   whatsappNumber: "41763054144",
   whatsappText: "Hallo DZ Studios, ich interessiere mich für eine Website und möchte gerne eine Anfrage senden.",
@@ -95,6 +98,7 @@ export function runContentTests(): TestResult[] {
     { name: "agb umlauts are restored", pass: agbSections[0].text.includes("Geschäftsbedingungen") && agbSections[6].title.includes("Gewährleistung") },
     { name: "email link exists", pass: emailLink.startsWith("mailto:") },
     { name: "fixed email address is used", pass: contactData.email === "info@dzstudio.ch" && emailLink.includes("info@dzstudio.ch") },
+    { name: "impressum address exists", pass: contactData.addressLine1.includes("Bolligenstrasse") && contactData.addressLine2.includes("3326 Krauchthal") },
     { name: "whatsapp link exists", pass: whatsappLink.startsWith("https://wa.me/") },
     { name: "package whatsapp includes starter", pass: decodeURIComponent(createPackageWhatsappLink("Starter")).includes("Starter") },
     { name: "two partners", pass: contactData.partners.length === 2 },
@@ -359,7 +363,7 @@ function ImpressumPage() {
         <h1 className="text-3xl font-bold tracking-tight sm:text-4xl md:text-6xl">Impressum</h1>
         <p className="mt-5 text-base leading-8 text-slate-300 sm:text-lg">Diese Seite enthält die wichtigsten Anbieterinformationen. Bitte ergänzt später eure offizielle Adresse und die Unternehmensform.</p>
         <div className="mt-10 grid gap-6 md:grid-cols-2">
-          <InfoBox title="Anbieter"><p className="mt-4 font-semibold text-white">{contactData.companyName}</p><p className="text-slate-300">Adresse folgt</p><p className="text-slate-300">Schweiz</p></InfoBox>
+          <InfoBox title="Anbieter"><p className="mt-4 font-semibold text-white">{contactData.companyName}</p><p className="text-slate-300">{contactData.addressLine1}</p><p className="text-slate-300">{contactData.addressLine2}</p><p className="text-slate-300">{contactData.country}</p></InfoBox>
           <InfoBox title="Kontakt"><p className="mt-4 break-words text-slate-300">E-Mail: <a href={emailLink} className="text-white underline">{contactData.email}</a></p><p className="text-slate-300">Telefon: <a href={contactData.partners[0].phoneHref} className="text-white underline">{contactData.partners[0].phoneDisplay}</a></p></InfoBox>
           <div className="rounded-3xl border border-white/10 bg-slate-950/70 p-6 md:col-span-2"><h2 className="text-2xl font-bold">Verantwortlich für den Inhalt</h2><div className="mt-4 grid gap-4 md:grid-cols-2">{contactData.partners.map((person) => <div key={person.name} className="rounded-2xl bg-white/5 p-4"><p className="text-sm text-slate-400">{person.role}</p><p className="font-semibold text-white">{person.name}</p><a href={person.phoneHref} className="text-slate-300 hover:underline">{person.phoneDisplay}</a></div>)}</div></div>
           <div className="rounded-3xl border border-white/10 bg-slate-950/70 p-6 md:col-span-2"><h2 className="text-2xl font-bold">Hinweis</h2><p className="mt-4 leading-7 text-slate-300">Die Inhalte dieser Website wurden sorgfältig erstellt. Für die Richtigkeit, Vollständigkeit und Aktualität übernehmen wir keine Gewähr.</p></div>
