@@ -1,7 +1,7 @@
  import React, { useMemo, useState } from "react";
 
 type PageName = "home" | "impressum";
-type IconName = "arrow" | "check" | "globe" | "phone" | "store" | "mail" | "shield" | "clock" | "star" | "legal";
+type IconName = "arrow" | "check" | "globe" | "phone" | "store" | "mail" | "whatsapp" | "instagram" | "shield" | "clock" | "star" | "legal";
 type TestResult = { name: string; pass: boolean };
 type ServiceItem = { icon: IconName; title: string; text: string };
 type PackageItem = { name: string; price: string; monthlyFee: string; text: string; points: string[] };
@@ -36,6 +36,7 @@ const emailBody = [
 
 const whatsappLink = `https://wa.me/${contactData.whatsappNumber}?text=${encodeURIComponent(contactData.whatsappText)}`;
 const emailLink = `mailto:${contactData.email}?subject=${encodeURIComponent("Website Anfrage")}&body=${encodeURIComponent(emailBody)}`;
+const instagramLink = "https://www.instagram.com/dz_studio.ch/";
 
 const agbSections: AgbSection[] = [
   { title: "1. Geltungsbereich", text: "Diese Allgemeinen Geschäftsbedingungen (AGB) gelten für alle Dienstleistungen im Bereich Web Consulting, die von den Betreibern dieser Website angeboten werden." },
@@ -106,7 +107,9 @@ export function runContentTests(): TestResult[] {
     { name: "impressum address exists", pass: contactData.addressLine1.includes("Bolligenstrasse") && contactData.addressLine2.includes("3326 Krauchthal") },
     { name: "whatsapp link exists", pass: whatsappLink.startsWith("https://wa.me/") },
     { name: "mobile shortcuts exist", pass: mobileShortcuts.length === 4 && mobileShortcuts.includes("Pakete") },
+    { name: "instagram link exists", pass: instagramLink.includes("instagram.com/dz_studio.ch") },
     { name: "sticky contact icons exist", pass: typeof StickyContactButton === "function" },
+    { name: "social contact icons exist", pass: ["mail", "whatsapp", "instagram"].every((icon) => typeof icon === "string") },
     { name: "website check section exists", pass: typeof WebsiteCheckSection === "function" },
     { name: "root export exists", pass: typeof WebagenturWebsite === "function" },
   ];
@@ -121,6 +124,8 @@ function Icon({ name, className = "h-6 w-6" }: { name: IconName; className?: str
     phone: <svg {...common}><rect x="7" y="2" width="10" height="20" rx="2" /><path d="M11 18h2" /></svg>,
     store: <svg {...common}><path d="m3 9 2-5h14l2 5" /><path d="M5 9h14" /><path d="M6 9v11" /><path d="M18 9v11" /><path d="M4 20h16" /></svg>,
     mail: <svg {...common}><rect x="3" y="5" width="18" height="14" rx="2" /><path d="m3 7 9 6 9-6" /></svg>,
+    whatsapp: <svg {...common} viewBox="0 0 32 32" fill="currentColor" stroke="none"><path d="M16.04 3.2C8.97 3.2 3.2 8.92 3.2 15.96c0 2.25.6 4.43 1.72 6.36L3.1 29l6.84-1.8a12.75 12.75 0 0 0 6.1 1.55h.01c7.08 0 12.84-5.72 12.84-12.76 0-3.41-1.34-6.62-3.77-9.03A12.79 12.79 0 0 0 16.04 3.2Zm0 23.38h-.01c-1.93 0-3.82-.52-5.47-1.5l-.39-.23-4.06 1.07 1.08-3.95-.26-.41a10.55 10.55 0 0 1-1.62-5.6c0-5.83 4.81-10.58 10.73-10.58 2.87 0 5.56 1.11 7.58 3.12a10.48 10.48 0 0 1 3.15 7.49c0 5.83-4.81 10.59-10.73 10.59Zm5.88-7.93c-.32-.16-1.9-.93-2.2-1.04-.29-.11-.5-.16-.72.16-.21.32-.83 1.04-1.02 1.25-.19.21-.38.24-.7.08-.32-.16-1.36-.5-2.59-1.59-.96-.85-1.6-1.9-1.79-2.22-.19-.32-.02-.5.14-.66.15-.15.32-.38.48-.57.16-.19.21-.32.32-.53.11-.21.05-.4-.03-.56-.08-.16-.72-1.73-.99-2.37-.26-.62-.52-.54-.72-.55h-.61c-.21 0-.56.08-.85.4-.29.32-1.12 1.09-1.12 2.66s1.15 3.08 1.31 3.29c.16.21 2.26 3.44 5.48 4.82.77.33 1.37.53 1.84.68.77.24 1.47.21 2.02.13.62-.09 1.9-.77 2.17-1.52.27-.75.27-1.39.19-1.52-.08-.13-.29-.21-.61-.37Z" /></svg>,
+    instagram: <svg {...common}><rect x="4" y="4" width="16" height="16" rx="5" /><circle cx="12" cy="12" r="3.5" /><path d="M16.5 7.5h.01" /></svg>,
     shield: <svg {...common}><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10Z" /><path d="m9 12 2 2 4-5" /></svg>,
     clock: <svg {...common}><circle cx="12" cy="12" r="10" /><path d="M12 6v6l4 2" /></svg>,
     star: <svg {...common}><path d="m12 2 3 6 6 .9-4.5 4.3 1 6.2L12 16.8 6.5 19.4l1-6.2L3 8.9 9 8l3-6Z" /></svg>,
@@ -193,6 +198,7 @@ function MobileShortcuts({ setPage }: { setPage: (page: PageName) => void }) {
         <a href="#services" onClick={() => setPage("home")} className="shrink-0 rounded-full border border-white/10 bg-white/5 px-4 py-2">Leistungen</a>
         <a href="#packages" onClick={() => setPage("home")} className="shrink-0 rounded-full border border-white/10 bg-white/5 px-4 py-2">Pakete</a>
         <a href="#contact" onClick={() => setPage("home")} className="shrink-0 rounded-full border border-white/10 bg-white/5 px-4 py-2">Kontakt</a>
+        <a href={instagramLink} target="_blank" rel="noreferrer" className="shrink-0 rounded-full border border-white/10 bg-white/5 px-4 py-2">Instagram</a>
         <button type="button" onClick={() => setPage("impressum")} className="shrink-0 rounded-full border border-white/10 bg-white/5 px-4 py-2">Impressum</button>
       </div>
     </div>
@@ -220,6 +226,7 @@ function Header({ page, setPage }: { page: PageName; setPage: (page: PageName) =
           <a href="#services" onClick={() => setPage("home")} className="hover:text-white">Leistungen</a>
           <a href="#packages" onClick={() => setPage("home")} className="hover:text-white">Pakete</a>
           <button type="button" onClick={() => setPage("impressum")} className={page === "impressum" ? "text-white" : "hover:text-white"}>Impressum</button>
+          <a href={instagramLink} target="_blank" rel="noreferrer" className="hover:text-white">Instagram</a>
         </nav>
         <a href="#contact" onClick={() => setPage("home")} className="rounded-full bg-white px-4 py-2.5 text-xs font-semibold text-slate-950 hover:bg-slate-200 sm:px-5 sm:text-sm">Anfrage senden</a>
       </div>
@@ -325,7 +332,7 @@ function FAQSection() {
 }
 
 function ContactSection() {
-  return <section id="contact" className="px-4 pb-24 sm:px-6"><div className="mx-auto max-w-7xl rounded-[2rem] bg-white p-6 text-slate-950 shadow-2xl sm:p-8 md:p-14"><div className="grid items-center gap-10 md:grid-cols-2"><div><p className="mb-3 text-sm font-semibold uppercase tracking-[0.25em] text-slate-500">Nächster Schritt</p><h2 className="text-3xl font-bold tracking-tight sm:text-4xl md:text-5xl">Senden Sie uns kurz, welche Website Sie brauchen.</h2><p className="mt-5 text-base leading-8 text-slate-700 sm:text-lg">Wir melden uns persönlich und sagen Ihnen ehrlich, welches Paket passt — ohne Verkaufsdruck und ohne komplizierte Agentur-Sprache.</p></div><div className="rounded-3xl bg-slate-950 p-6 text-white"><p className="text-sm text-slate-400">Direkte Anfrage</p><a href={emailLink} className="mt-3 block break-words text-xl font-bold hover:underline sm:text-2xl">{contactData.email}</a><div className="mt-5 grid gap-4 text-slate-300">{contactData.partners.map((person) => <div key={person.name} className="rounded-2xl bg-white/5 p-4"><p className="text-sm text-slate-400">{person.role}</p><p className="mt-1 font-semibold text-white">{person.name}</p><a href={person.phoneHref} className="hover:underline">{person.phoneDisplay}</a></div>)}</div><div className="mt-6 grid gap-3"><LinkButton href={whatsappLink}>Jetzt unverbindlich per WhatsApp anfragen</LinkButton><LinkButton href={emailLink} variant="outline">Website-Projekt per E-Mail senden</LinkButton></div></div></div></div></section>;
+  return <section id="contact" className="px-4 pb-24 sm:px-6"><div className="mx-auto max-w-7xl rounded-[2rem] bg-white p-6 text-slate-950 shadow-2xl sm:p-8 md:p-14"><div className="grid items-center gap-10 md:grid-cols-2"><div><p className="mb-3 text-sm font-semibold uppercase tracking-[0.25em] text-slate-500">Nächster Schritt</p><h2 className="text-3xl font-bold tracking-tight sm:text-4xl md:text-5xl">Senden Sie uns kurz, welche Website Sie brauchen.</h2><p className="mt-5 text-base leading-8 text-slate-700 sm:text-lg">Wir melden uns persönlich und sagen Ihnen ehrlich, welches Paket passt — ohne Verkaufsdruck und ohne komplizierte Agentur-Sprache.</p></div><div className="rounded-3xl bg-slate-950 p-6 text-white"><p className="text-sm text-slate-400">Direkte Anfrage</p><a href={emailLink} className="mt-3 block break-words text-xl font-bold hover:underline sm:text-2xl">{contactData.email}</a><div className="mt-5 grid gap-4 text-slate-300">{contactData.partners.map((person) => <div key={person.name} className="rounded-2xl bg-white/5 p-4"><p className="text-sm text-slate-400">{person.role}</p><p className="mt-1 font-semibold text-white">{person.name}</p><a href={person.phoneHref} className="hover:underline">{person.phoneDisplay}</a></div>)}</div><div className="mt-6 grid gap-3"><LinkButton href={whatsappLink}>Jetzt unverbindlich per WhatsApp anfragen</LinkButton><LinkButton href={emailLink} variant="outline">Website-Projekt per E-Mail senden</LinkButton><LinkButton href={instagramLink} variant="outline">Instagram besuchen</LinkButton></div></div></div></div></section>;
 }
 
 function InfoBox({ title, children }: { title: string; children: React.ReactNode }) {
@@ -345,12 +352,50 @@ function Footer({ setPage }: { setPage: (page: PageName) => void }) {
 }
 
 function StickyContactButton() {
-  return <div className="fixed bottom-5 right-5 z-50 flex flex-col gap-3"><a href={emailLink} aria-label="E-Mail Anfrage senden" title="E-Mail Anfrage senden" className="inline-flex h-12 w-12 items-center justify-center rounded-full border border-white/20 bg-slate-950 text-white shadow-2xl transition hover:bg-white/10 md:h-14 md:w-14"><Icon name="mail" className="h-5 w-5 md:h-6 md:w-6" /></a><a href={whatsappLink} aria-label="WhatsApp Anfrage senden" title="WhatsApp Anfrage senden" className="sticky-cta inline-flex h-12 w-12 items-center justify-center rounded-full bg-white text-slate-950 shadow-2xl transition hover:bg-slate-200 md:h-14 md:w-14"><Icon name="phone" className="h-5 w-5 md:h-6 md:w-6" /></a></div>;
+  return (
+    <div className="fixed bottom-5 right-5 z-50 flex flex-col gap-3">
+      <a
+        href={emailLink}
+        aria-label="E-Mail Anfrage senden"
+        title="E-Mail Anfrage senden"
+        className="inline-flex h-12 w-12 items-center justify-center rounded-full border border-white/20 bg-slate-950 text-white shadow-2xl transition hover:bg-white/10 md:h-14 md:w-14"
+      >
+        <Icon name="mail" className="h-5 w-5 md:h-6 md:w-6" />
+      </a>
+      <a
+        href={whatsappLink}
+        aria-label="WhatsApp Anfrage senden"
+        title="WhatsApp Anfrage senden"
+        className="sticky-cta inline-flex h-12 w-12 items-center justify-center rounded-full bg-white text-slate-950 shadow-2xl transition hover:bg-slate-200 md:h-14 md:w-14"
+      >
+        <Icon name="whatsapp" className="h-5 w-5 md:h-6 md:w-6" />
+      </a>
+      <a
+        href={instagramLink}
+        target="_blank"
+        rel="noreferrer"
+        aria-label="Instagram öffnen"
+        title="Instagram öffnen"
+        className="inline-flex h-12 w-12 items-center justify-center rounded-full border border-white/20 bg-slate-950 text-sm font-bold text-white shadow-2xl transition hover:bg-white/10 md:h-14 md:w-14"
+      >
+        <Icon name="instagram" className="h-5 w-5 md:h-6 md:w-6" />
+      </a>
+    </div>
+  );
 }
 
 function WebagenturWebsite() {
   const [page, setPage] = useState<PageName>("home");
-  return <div className="min-h-screen bg-slate-950 text-white"><PremiumStyles /><Header page={page} setPage={setPage} />{page === "home" ? <HomePage /> : <ImpressumPage />}<Footer setPage={setPage} /><StickyContactButton /></div>;
+
+  return (
+    <div className="min-h-screen bg-slate-950 text-white">
+      <PremiumStyles />
+      <Header page={page} setPage={setPage} />
+      {page === "home" ? <HomePage /> : <ImpressumPage />}
+      <Footer setPage={setPage} />
+      <StickyContactButton />
+    </div>
+  );
 }
 
 export default WebagenturWebsite;
